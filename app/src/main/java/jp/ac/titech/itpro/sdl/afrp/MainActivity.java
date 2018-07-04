@@ -30,10 +30,12 @@ public class MainActivity extends AppCompatActivity {
     // Runボタンをクリックした時に呼び出される
     // EditText(inputCode)からソースコード(String)を取得してsourceCodeに代入
     public void onClickRun(View v){
-        Log.d("MainActivity","onClickRun");
+        Log.d("chakku:MainActivity","onClickRun");
         sourceCode = inputCode.getText().toString();
         Log.d("chakku:MainActivity",sourceCode);
         AFRPLexer lexer = new AFRPLexer(CharStreams.fromString(sourceCode));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
+        AFRPParser parser = new AFRPParser(tokens);
+        Log.d("chakku:MainActivity","Parse OK");
     }
 }

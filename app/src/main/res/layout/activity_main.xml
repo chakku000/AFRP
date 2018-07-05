@@ -22,15 +22,42 @@
             android:background="#ccccee"
             android:id="@+id/SourceCode"
             />
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="40px"
-            android:id="@+id/RunButton"
-            android:layout_gravity="right"
-            android:text="Run"
-            android:onClick="onClickRun"
+            android:orientation="horizontal"
+            android:gravity="right"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40px"
+                android:id="@+id/RunButton"
+                android:text="Run"
+                android:onClick="onClickRun"
             />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40px"
+                android:id="@+id/StopButton"
+                android:text="STOP"
+            />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ff0000">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20px"
+                android:background="#ffffff"
+                android:id="@+id/ResultText"
+                android:maxLines="20"
+                android:text="test \n test"
+                />
+        </LinearLayout>
     </LinearLayout>
 
     <!--

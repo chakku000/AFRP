@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AFRP</string>
+    <string name="toast_no_sensor_manager">No SensorManager Available</string>
+    <string name="toast_no_accel_sensor">No Accelerometer Available</string>
 </resources>

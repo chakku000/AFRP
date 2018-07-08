@@ -7,11 +7,12 @@ import android.util.Log;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class DefinitionAST implements AST {
     public String node_id;
     public ExpressionAST expast;
-    public Collection<String> dependence;
+    public TreeSet<String> dependence;
 
     public static DefinitionAST parse(AFRPParser.DefinitionContext ctx){
         DefinitionAST ast = new DefinitionAST();
@@ -42,7 +43,7 @@ public class DefinitionAST implements AST {
     }
 
     /* 依存している変数のリストを作成する */
-    public Collection<String> getDependence(){
+    public TreeSet<String> getDependence(){
         dependence = expast.getDependance();
         return dependence;
     }

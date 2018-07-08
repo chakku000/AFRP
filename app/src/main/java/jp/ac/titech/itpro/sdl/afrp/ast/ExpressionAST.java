@@ -109,7 +109,7 @@ public class ExpressionAST implements AST {
 
 
     /* 依存してる変数のリストを返す */
-    public Set<String> getDependance(){
+    public TreeSet<String> getDependance(){
         TreeSet<String> ret = new TreeSet<>();
         if(exptype == ExpType.CONSTANT){
         }else if(exptype == ExpType.ID){

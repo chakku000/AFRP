@@ -3,6 +3,9 @@ package jp.ac.titech.itpro.sdl.afrp;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.hardware.SensorEvent;
@@ -19,7 +22,9 @@ import android.widget.Toast;
 import android.view.View;
 
 import java.util.Map;
+import java.util.Queue;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import jp.ac.titech.itpro.sdl.afrp.ast.AST;
 import jp.ac.titech.itpro.sdl.afrp.ast.TopLevelAST;
@@ -35,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     /* FRPの実装に必要な変数 */
     private TopLevelAST ast;
-    private Map<String,Number> nodes;
-    private List<String> outnodes;
+    private TreeMap<String,Number> nodes;
+    private List<String> innodes;   /* 入力ノード */
+    private List<String> outnodes;  /* 出力ノード */
+    private TreeMap<String,TreeSet<String>> depend;
+    private ArrayList<String> executionOrder;
 
     /* Activityが生成された最初の1回だけ呼び出される */
     @Override
@@ -105,8 +113,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         /* AST作成 */
         ast = TopLevelAST.parse(toplevelctx);
+        innodes = ast.innodes;
         outnodes = ast.outnodes;
+        depend = ast.getDependence();
         Log.d("chakku:MainActivity","Generate AST : Success");
+        for(Map.Entry<String,TreeSet<String>> entry : depend.entrySet()){
+            String str = entry.getKey();
+            str += " : ";
+            for(String s : entry.getValue()){
+                str += s + " ";
+            }
+            Log.d("chakku:依存関係",str);
+        }
+        executionOrder = TopologicalSort(depend, (ArrayList<String>) innodes);
+        Log.d("chakku:実行順序",executionOrder.toString());
 
         /* リスナーの登録 */
         // TODO : 現在は暫定的に加速度センサーを取得しているが、inputnodesの値をみて決定するべき
@@ -124,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-            Log.d("chakku:onSensorChanged","加速度センサーの値が変わりました");
+            //Log.d("chakku:onSensorChanged","加速度センサーの値が変わりました");
             nodes.put("accx",event.values[0]);
             nodes.put("accy",event.values[1]);
             nodes.put("accz",event.values[2]);
@@ -145,4 +165,45 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
+    public static ArrayList<String> TopologicalSort(TreeMap<String,TreeSet<String>> map,ArrayList<String> innodes){
+        TreeMap<String,TreeSet<String>> G = new TreeMap<>();
+        for(String entry : map.keySet()) G.put(entry,new TreeSet<String>());
+        for(String entry : innodes) G.put(entry,new TreeSet<String>());
+        for(Map.Entry<String,TreeSet<String>> entry:map.entrySet()){
+            for(String s : entry.getValue()) G.get(s).add(entry.getKey());
+        }
+        TreeMap<String,Integer> indeg = new TreeMap<>();
+        for(String entry:G.keySet()) indeg.put(entry,0);
+        for(Map.Entry<String,TreeSet<String>> entry:G.entrySet()){
+            for(String s : entry.getValue()){
+                int deg = indeg.get(s);
+                indeg.put(s,deg+1);
+            }
+        }
+        TreeMap<String,Boolean> used = new TreeMap<>();
+        for(String node : G.keySet()) used.put(node,false);
+        ArrayList<String> ret = new ArrayList<>();
+        for(String node : G.keySet()){
+            if(indeg.get(node) == 0 && used.get(node) == false){
+                Queue<String> que = new ArrayDeque<>();
+                que.offer(node);
+                used.put(node,true);
+                while(!que.isEmpty()){
+                    String u = que.poll();
+                    ret.add(u);
+                    for(String v : G.get(u)){
+                        int deg = indeg.get(v); deg--;
+                        indeg.put(v,deg);
+                        if(indeg.get(v) == 0 && !used.get(v)){
+                            used.put(v,true);
+                            que.offer(v);
+                        }
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
 }

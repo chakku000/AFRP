@@ -42,6 +42,7 @@
                 android:layout_marginRight="40px"
                 android:id="@+id/StopButton"
                 android:text="STOP"
+                android:onClick="onClickStop"
             />
         </LinearLayout>
         <LinearLayout
@@ -59,29 +60,4 @@
                 />
         </LinearLayout>
     </LinearLayout>
-
-    <!--
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:minLines="10"
-        android:maxLines="10"
-        android:background="#cccccc"
-        android:text="TextView"
-        />
-    -->
-
-    <!--
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    -->
-
 </android.support.constraint.ConstraintLayout>

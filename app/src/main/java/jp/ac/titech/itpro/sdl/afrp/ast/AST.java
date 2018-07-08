@@ -4,5 +4,5 @@ import java.util.Map;
 public interface AST {
     public void print();
     public void print(int tab);
-    public void exec(Map<String,Number> map);
+    public String exec(Map<String,Number> map);
 }

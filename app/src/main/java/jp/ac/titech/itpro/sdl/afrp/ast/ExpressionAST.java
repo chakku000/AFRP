@@ -104,7 +104,48 @@ public class ExpressionAST implements AST {
     }
 
     @Override
-    public void exec(Map<String, Number> map) {
+    public String exec(Map<String, Number> map) {
+        if(exptype == ExpType.CONSTANT) return getConstant();
+        else if(exptype == ExpType.ID) return getID();
+        else if(exptype == ExpType.BINOP){
+            String op = getOp();
+            String ex1 = expressions.get(0).exec(map);
+            String ex2 = expressions.get(1).exec(map);
+
+            String ret = "";
+            float e1,e2;
+            switch (op){
+                case "*":
+                    e1 = Float.parseFloat(ex1);
+                    e2 = Float.parseFloat(ex2);
+                    ret = Float.toString(e1*e2);
+                    break;
+                case "/":
+                    e1 = Float.parseFloat(ex1);
+                    e2 = Float.parseFloat(ex2);
+                    ret = Float.toString(e1/e2);
+                    break;
+                case "%":   // ex1,ex2を両方intで扱って剰余をとる
+                    e1 = Float.parseFloat(ex1);
+                    e2 = Float.parseFloat(ex2);
+                    ret = Integer.toString((int)e1 % (int)e2);
+                    break;
+                case "+":
+                    e1 = Float.parseFloat(ex1);
+                    e2 = Float.parseFloat(ex2);
+                    ret = Float.toString(e1+e2);
+                    break;
+                case "-":
+                    e1 = Float.parseFloat(ex1);
+                    e2 = Float.parseFloat(ex2);
+                    ret = Float.toString(e1-e2);
+                    break;
+            }
+            return ret;
+        }else{  // if expression
+            String ret = "";
+            return ret;
+        }
     }
 
 

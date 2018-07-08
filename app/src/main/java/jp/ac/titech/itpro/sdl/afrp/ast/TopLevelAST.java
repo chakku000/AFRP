@@ -5,7 +5,10 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import jp.ac.titech.itpro.sdl.afrp.AFRPParser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import android.util.Log;
 
@@ -57,5 +60,24 @@ public class TopLevelAST implements AST{
         for(DefinitionAST ast : definitions){
             ast.print(tab+2);
         }
+    }
+
+    @Override
+    public void exec(Map<String, Number> map) {
+
+    }
+
+    /*
+       依存関係を返す
+       Key : ノード名
+       Value : Keyノードが依存しているノード名
+     */
+    public Map<String,Collection<String>> getDependence(){
+        TreeMap<String,Collection<String>> ret = new TreeMap<>();
+        for(DefinitionAST ast : definitions){
+            String nodename = ast.getNodeName();
+            Collection<String> dep = ast.getDependence();
+        }
+        return ret;
     }
 }

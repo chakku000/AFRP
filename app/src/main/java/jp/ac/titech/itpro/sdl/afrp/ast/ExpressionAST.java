@@ -2,10 +2,15 @@ package jp.ac.titech.itpro.sdl.afrp.ast;
 
 import android.util.Log;
 
+import org.antlr.runtime.tree.Tree;
+
 import jp.ac.titech.itpro.sdl.afrp.AFRPParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class ExpressionAST implements AST {
@@ -96,5 +101,28 @@ public class ExpressionAST implements AST {
                 ast.print(tab+2);
             }
         }
+    }
+
+    @Override
+    public void exec(Map<String, Number> map) {
+    }
+
+
+    /* 依存してる変数のリストを返す */
+    public Set<String> getDependance(){
+        TreeSet<String> ret = new TreeSet<>();
+        if(exptype == ExpType.CONSTANT){
+        }else if(exptype == ExpType.ID){
+            ret.add(getID());
+        }else if(exptype == ExpType.BINOP){
+            for(ExpressionAST ast : expressions){
+                ret.addAll(ast.getDependance());
+            }
+        }else if(exptype == ExpType.IF){
+            for(ExpressionAST ast : expressions){
+                ret.addAll(ast.getDependance());
+            }
+        }
+        return ret;
     }
 }

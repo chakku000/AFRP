@@ -51,6 +51,9 @@
             android:layout_height="wrap_content"
             android:background="#333333"
             android:orientation="vertical">
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,6 +64,8 @@
                 android:text="結果出力"
                 android:textSize="24sp"
                 />
+            </ScrollView>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

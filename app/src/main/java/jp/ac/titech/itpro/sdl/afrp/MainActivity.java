@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     /* FRPの実装に必要な変数 */
     private TopLevelAST ast;
-    private TreeMap<String,Number> nodes;
+    private TreeMap<String,String> nodes;
     private List<String> innodes;   /* 入力ノード */
     private List<String> outnodes;  /* 出力ノード */
     private TreeMap<String,TreeSet<String>> depend;
-    private ArrayList<String> executionOrder;
+    private ArrayList<String> executionOrder;   /* 実行順序 */
 
     /* Activityが生成された最初の1回だけ呼び出される */
     @Override
@@ -145,14 +145,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             //Log.d("chakku:onSensorChanged","加速度センサーの値が変わりました");
-            nodes.put("accx",event.values[0]);
-            nodes.put("accy",event.values[1]);
-            nodes.put("accz",event.values[2]);
+            nodes.put("accx",Float.toString(event.values[0]));
+            nodes.put("accy",Float.toString(event.values[1]));
+            nodes.put("accz",Float.toString(event.values[2]));
         }else{
             Log.d("chakku:onSensorChanged","不明なセンサーの値が変わりました");
         }
 
         /* TODO ASTから計算 */
+        ast.setOrder(executionOrder);                   // 実行順序を設定
+        String evalres = ast.eval(nodes);               // 実行
+        //Log.d("chakku:onSensorChanged",evalres);
 
         /* TODO 結果を出力 */
         String outstr = "";
@@ -166,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    /* トポロジカルソート */
     public static ArrayList<String> TopologicalSort(TreeMap<String,TreeSet<String>> map,ArrayList<String> innodes){
         TreeMap<String,TreeSet<String>> G = new TreeMap<>();
         for(String entry : map.keySet()) G.put(entry,new TreeSet<String>());

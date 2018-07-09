@@ -17,6 +17,7 @@ import android.util.Log;
 public class TopLevelAST implements AST{
     public List<String> innodes,outnodes;
     public List<DefinitionAST> definitions;
+    public ArrayList<DefinitionAST> executionOrder;
 
     public static TopLevelAST parse(AFRPParser.TopLevelContext ctx){
         TopLevelAST ast = new TopLevelAST();
@@ -65,8 +66,14 @@ public class TopLevelAST implements AST{
     }
 
     @Override
-    public void exec(Map<String, Number> map) {
+    public String eval(Map<String, String> map) {
+        Log.d("chakku:Toplevel","Eval called size = " + executionOrder.size());
 
+        for(DefinitionAST ast : executionOrder){
+            Log.d("chakku:Toplevel2","\tnodeid = " + ast.node_id);
+            ast.eval(map);
+        }
+        return "Eval Success";
     }
 
     /*
@@ -83,5 +90,16 @@ public class TopLevelAST implements AST{
             ret.put(nodename,dep);
         }
         return ret;
+    }
+
+    public void setOrder(ArrayList<String> order){
+        executionOrder = new ArrayList<>();
+        for(String nodename : order){
+            for(DefinitionAST ast : definitions){
+                if(nodename.equals(ast.node_id)){
+                    executionOrder.add(ast);
+                }
+            }
+        }
     }
 }

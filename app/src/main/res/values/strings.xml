@@ -2,4 +2,12 @@
     <string name="app_name">AFRP</string>
     <string name="toast_no_sensor_manager">No SensorManager Available</string>
     <string name="toast_no_accel_sensor">No Accelerometer Available</string>
+    <string name="toast_no_light_sensor">No Light Sensor Available</string>
+    <string name="explanation">
+        入力ノード一覧 \n
+        accx : 加速度センサーx軸 \n
+        accy : 加速度センサーy軸 \n
+        accz : 加速度センサーz軸 \n
+        light : 照度センサー \n
+    </string>
 </resources>

@@ -107,6 +107,11 @@ public class ExpressionAST implements AST {
     public String eval(Map<String, String> map) {
         if(exptype == ExpType.CONSTANT) return getConstant();
         else if(exptype == ExpType.ID){
+            String ret = map.get(getID());
+            if(ret == null){
+                Log.d("chakku:Error NULL",getID() + " is NULL");
+                return "0";
+            }
             return map.get(getID());
         }
         else if(exptype == ExpType.BINOP){

@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     /* センサー関連の変数 */
     private SensorManager sensorManager;
     private Sensor accel;       // 加速度センサー
+    private Sensor light;       // 照度センサー
 
     /* FRPの実装に必要な変数 */
     private TopLevelAST ast;
@@ -67,11 +68,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         /* 各種センサーの設定 */
-        /* TODO : センサーの取得を必要になってからしてもいいかもしれない */
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); // 加速度センサー
         if(accel == null){
             // 加速度センサーが取得できない場合にAndroidでエラーメッセージを表示
             Toast.makeText(this,R.string.toast_no_accel_sensor,Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        // 照度センサー
+        light = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        if(light == null){
+            // 照度センサーが取得できない場合にAndroidでエラーメッセージを表示
+            Toast.makeText(this,R.string.toast_no_light_sensor,Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -115,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ast = TopLevelAST.parse(toplevelctx);
         innodes = ast.innodes;
         outnodes = ast.outnodes;
+        Log.d("chakku:入力ノード", "" + innodes);
         depend = ast.getDependence();
         Log.d("chakku:MainActivity","Generate AST : Success");
         for(Map.Entry<String,TreeSet<String>> entry : depend.entrySet()){
@@ -129,9 +138,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.d("chakku:実行順序",executionOrder.toString());
 
         /* リスナーの登録 */
-        // TODO : 現在は暫定的に加速度センサーを取得しているが、inputnodesの値をみて決定するべき
-        // SensorManager.SENSOR_DELAY_NORMAL : 200ms (DELAY_FASTESTなら0ms,DELAY_GAMEなら20ms,DELAY_UIなら60ms)
-        sensorManager.registerListener(this,accel,SensorManager.SENSOR_DELAY_NORMAL);
+        // SensorManager.SENSOR_DELAY_NORMAL : 200ms (DELAY_FASTESTなら0ms,DELAY_GAMEなら20ms,DELAY_UIなら60ms,DELAY_NORMALなら200ms)
+        if(innodes.indexOf("accx")!=-1 || innodes.indexOf("accy") != -1 || innodes.indexOf("accz") != -1) {
+            Log.d("chakku:Sensor","加速度センサーをリスナーに登録します");
+            sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_UI);
+        }
+        if(innodes.indexOf("light") != -1){
+            Log.d("chakku:Sensor","照度センサーをリスナーに登録します");
+            sensorManager.registerListener(this,light,SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     /* Stopボタンをクリックした時の呼び出し */
@@ -148,7 +163,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             nodes.put("accx",Float.toString(event.values[0]));
             nodes.put("accy",Float.toString(event.values[1]));
             nodes.put("accz",Float.toString(event.values[2]));
-        }else{
+        }
+        else if(event.sensor.getType() == Sensor.TYPE_LIGHT){
+            nodes.put("light",Float.toString(event.values[0]));
+        }
+        else{
             Log.d("chakku:onSensorChanged","不明なセンサーの値が変わりました");
         }
 

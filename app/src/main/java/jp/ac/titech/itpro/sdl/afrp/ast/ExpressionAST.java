@@ -51,7 +51,7 @@ public class ExpressionAST implements AST {
             ast.str = ctx.binOpBitAnd().getText();
         }else if(ctx.binOpBitXor() != null){
             ast.exptype = ExpType.BINOP;
-            ast.str = ctx.binOpBitOr().getText();
+            ast.str = ctx.binOpBitXor().getText();
         }else if(ctx.binOpBitOr() != null){
             ast.exptype = ExpType.BINOP;
             ast.str = ctx.binOpBitOr().getText();
@@ -64,7 +64,6 @@ public class ExpressionAST implements AST {
         }else{
             ast.exptype = ExpType.IF;
         }
-
 
         if(ast.exptype == ExpType.BINOP || ast.exptype == ExpType.IF){
             ast.expressions = new ArrayList<>();

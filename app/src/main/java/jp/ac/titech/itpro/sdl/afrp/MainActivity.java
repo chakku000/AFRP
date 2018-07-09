@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     /* FRPの実装に必要な変数 */
     private TopLevelAST ast;
     private TreeMap<String, String> nodes;
+    private TreeMap<String, String> lastnodes;
     private List<String> innodes;   /* 入力ノード */
     private List<String> outnodes;  /* 出力ノード */
     private TreeMap<String, TreeSet<String>> depend;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         /* FRPで使用する変数(ノード)の初期化 */
         nodes = new TreeMap<>();
+        lastnodes = new TreeMap<>();
     }
 
     /* Activityが全面に出るときに呼び出される */
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         /* TODO ASTから計算 */
         ast.setOrder(executionOrder);                   // 実行順序を設定
-        String evalres = ast.eval(nodes);               // 実行
+        String evalres = ast.eval(nodes,lastnodes);               // 実行
         //Log.d("chakku:onSensorChanged",evalres);
 
         /* TODO 結果を出力 */
@@ -182,7 +184,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             outstr += out + " : " + nodes.get(out) + "\n";
         }
         resultview.setText(outstr);
+
+        /* 大文字で前回の値を取れるように */
+        for(Map.Entry<String,String> entry : nodes.entrySet()){
+            String key = entry.getKey().toUpperCase();
+            lastnodes.put(key,entry.getValue());
+        }
     }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

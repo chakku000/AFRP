@@ -104,20 +104,23 @@ public class ExpressionAST implements AST {
     }
 
     @Override
-    public String eval(Map<String, String> map) {
+    public String eval(Map<String, String> map,Map<String,String> lastmap) {
         if(exptype == ExpType.CONSTANT) return getConstant();
         else if(exptype == ExpType.ID){
             String ret = map.get(getID());
             if(ret == null){
+                if(lastmap.get(getID())!= null){    // 前ループの値
+                    return lastmap.get(getID());
+                }
                 Log.d("chakku:Error NULL",getID() + " is NULL");
                 return "0";
             }
-            return map.get(getID());
+            return ret;
         }
         else if(exptype == ExpType.BINOP){
             String op = getOp();
-            String ex1 = expressions.get(0).eval(map);
-            String ex2 = expressions.get(1).eval(map);
+            String ex1 = expressions.get(0).eval(map,lastmap);
+            String ex2 = expressions.get(1).eval(map,lastmap);
 
             String ret = "";
             switch (op){
@@ -322,11 +325,11 @@ public class ExpressionAST implements AST {
             return ret;
         }else{  // if expression
             String ret = "";
-            String cond = expressions.get(0).eval(map);
+            String cond = expressions.get(0).eval(map,lastmap);
             if(isCondTrue(cond)){
-                ret = expressions.get(1).eval(map);
+                ret = expressions.get(1).eval(map,lastmap);
             }else{
-                ret = expressions.get(2).eval(map);
+                ret = expressions.get(2).eval(map,lastmap);
             }
             return ret;
         }
@@ -337,7 +340,9 @@ public class ExpressionAST implements AST {
         TreeSet<String> ret = new TreeSet<>();
         if(exptype == ExpType.CONSTANT){
         }else if(exptype == ExpType.ID){
-            ret.add(getID());
+            String id = getID();
+            if(id.equals(id.toLowerCase())) ret.add(getID());
+            //ret.add(getID());
         }else if(exptype == ExpType.BINOP){
             for(ExpressionAST ast : expressions){
                 ret.addAll(ast.getDependance());

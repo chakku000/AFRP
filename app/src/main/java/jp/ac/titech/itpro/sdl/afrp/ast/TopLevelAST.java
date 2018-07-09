@@ -66,12 +66,12 @@ public class TopLevelAST implements AST{
     }
 
     @Override
-    public String eval(Map<String, String> map) {
+    public String eval(Map<String, String> map,Map<String,String> lastmap) {
         //Log.d("chakku:Toplevel","Eval called size = " + executionOrder.size());
 
         for(DefinitionAST ast : executionOrder){
             //Log.d("chakku:Toplevel2","\tnodeid = " + ast.node_id);
-            ast.eval(map);
+            ast.eval(map,lastmap);
         }
         return "Eval Success";
     }

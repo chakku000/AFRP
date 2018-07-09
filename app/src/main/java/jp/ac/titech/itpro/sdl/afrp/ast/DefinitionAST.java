@@ -38,8 +38,8 @@ public class DefinitionAST implements AST {
     }
 
     @Override
-    public String eval(Map<String, String> map) {
-        String val = expast.eval(map);
+    public String eval(Map<String, String> map,Map<String,String> lastmap) {
+        String val = expast.eval(map,lastmap);
         //Log.d("chakku:Definition" , node_id + " : " + val);
         map.put(node_id,val);
         return val;

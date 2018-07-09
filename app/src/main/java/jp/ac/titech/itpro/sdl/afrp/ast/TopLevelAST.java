@@ -67,10 +67,10 @@ public class TopLevelAST implements AST{
 
     @Override
     public String eval(Map<String, String> map) {
-        Log.d("chakku:Toplevel","Eval called size = " + executionOrder.size());
+        //Log.d("chakku:Toplevel","Eval called size = " + executionOrder.size());
 
         for(DefinitionAST ast : executionOrder){
-            Log.d("chakku:Toplevel2","\tnodeid = " + ast.node_id);
+            //Log.d("chakku:Toplevel2","\tnodeid = " + ast.node_id);
             ast.eval(map);
         }
         return "Eval Success";
@@ -85,7 +85,7 @@ public class TopLevelAST implements AST{
         TreeMap<String,TreeSet<String>> ret = new TreeMap<>();
         for(DefinitionAST ast : definitions){
             String nodename = ast.getNodeName();
-            Log.d("chakku:TopLevel",nodename);
+            //Log.d("chakku:TopLevel",nodename);
             TreeSet<String> dep = ast.getDependence();
             ret.put(nodename,dep);
         }

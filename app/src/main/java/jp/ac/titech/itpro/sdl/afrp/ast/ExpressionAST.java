@@ -135,8 +135,8 @@ public class ExpressionAST implements AST {
                 }
                     break;
                 case "+": {
-                    Log.d("chakku:check--- +",ex1);
-                    Log.d("chakku:check--- +",ex2);
+                    //Log.d("chakku:check--- +",ex1);
+                    //Log.d("chakku:check--- +",ex2);
                     double e1 = Double.parseDouble(ex1);
                     double e2 = Double.parseDouble(ex2);
                     ret = Double.toString(e1 + e2);

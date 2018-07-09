@@ -94,6 +94,7 @@ public class TopLevelAST implements AST{
 
     public void setOrder(ArrayList<String> order){
         executionOrder = new ArrayList<>();
+        Log.d("chakku:setOrder","order is " + order);
         for(String nodename : order){
             for(DefinitionAST ast : definitions){
                 if(nodename.equals(ast.node_id)){
